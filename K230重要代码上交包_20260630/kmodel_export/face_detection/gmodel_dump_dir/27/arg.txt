@@ -1,0 +1,7 @@
+gmodel_dump_dir/27/gmodel.bin
+508008
+508598
+8000
+"gmodel_dump_dir/27"
+4
+wait-key

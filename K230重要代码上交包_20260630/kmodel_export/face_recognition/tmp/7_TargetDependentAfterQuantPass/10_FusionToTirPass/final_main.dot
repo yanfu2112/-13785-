@@ -1,0 +1,7 @@
+digraph
+{
+    "\"0\"" [ label = var_2_2, shape = rectangle ]
+    "\"1\"" [ label = <<table border="0" cellborder="1" cellspacing="0"><tr><td>Call</td><td>func_0</td><td port="P0">ddrIf</td></tr><tr><td colspan="3">f32[1,256]</td></tr></table>>, shape = plain ]
+
+    "\"0\"" -> "\"1\"":P0
+}

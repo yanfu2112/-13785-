@@ -1,0 +1,108 @@
+K230 智能人脸识别门禁考勤系统 - 重要代码上交说明
+
+一、本工程主要代码目录
+
+完整 SDK 中的原始位置：
+k230_sdk/src/reference/K230_AI_Demo_Development_Process_Analysis/kmodel_related/kmodel_inference/face_access_system/
+
+Windows 工作区中的位置：
+D:\BaiduNetdiskDownload\RT-Threa Smart AI套件\补充\k230_sdk\src\reference\K230_AI_Demo_Development_Process_Analysis\kmodel_related\kmodel_inference\face_access_system
+
+本压缩包中对应位置：
+kmodel_inference/face_access_system/
+
+
+二、最重要的源码文件
+
+1. kmodel_inference/face_access_system/capture_display_main.cc
+   摄像头采集与显示进程。负责 VICAP 摄像头采集、MMZ 双缓冲、VO/TFT 显示、OSD 绘制和命令轮询。
+
+2. kmodel_inference/face_access_system/face_ai_main.cc
+   人脸 AI 推理进程。负责 RetinaFace 人脸检测、五点对齐、MobileFaceNet 特征提取、动态注册、人脸库匹配和识别结果输出。
+
+3. kmodel_inference/face_access_system/access_control_main.cc
+   门禁控制与日志进程。负责 OPEN、ALARM、REGISTER 等事件状态机，写入 access.csv，并输出继电器/蜂鸣器 dry-run 控制信息。
+
+4. kmodel_inference/face_access_system/face_access_common.h
+   三进程共享数据结构和通信协议定义，包括共享帧槽、识别结果、控制命令、心跳状态等。
+
+5. kmodel_inference/face_access_system/CMakeLists.txt
+   face_access_system 子工程编译配置，用于生成 capture_display.elf、face_ai.elf、access_control.elf。
+
+6. kmodel_inference/face_access_system/start_face_access.sh
+   开发板 RT-Smart 大核侧一键启动脚本。
+
+7. kmodel_inference/face_access_system/stop_face_access.sh
+   开发板 RT-Smart 大核侧停止脚本。
+
+8. kmodel_inference/face_access_system/linux_service/server.py
+   Ubuntu 侧 Web 后台服务。通过 ADB 读取开发板 /sharefs/face_access/access.csv，并向 command.txt 写入 REGISTER、RESET 等管理命令。
+
+9. kmodel_inference/face_access_system/linux_service/start_web_adb.sh
+   Ubuntu 侧 Web 服务启动脚本。启动后浏览器访问 http://127.0.0.1:8080。
+
+
+三、算法与模型相关代码
+
+1. kmodel_inference/face_detection/
+   官方/基础人脸检测示例代码，包含 RetinaFace 检测、anchor、预处理和后处理逻辑。
+
+2. kmodel_inference/face_recognition/
+   官方/基础人脸识别示例代码，包含人脸检测、对齐、特征提取和识别相关逻辑。
+
+3. kmodel_export/
+   模型转换与模型资源目录，包含 face_detect_640.kmodel、face_recognize.kmodel 以及模型导出脚本。
+
+
+四、编译相关文件
+
+1. kmodel_inference/CMakeLists.txt
+   kmodel_inference 总 CMake 配置，已加入 face_access_system 子目录。
+
+2. kmodel_inference/build_app.sh
+   应用交叉编译入口脚本。
+
+3. kmodel_inference/cmake/
+   RISC-V 交叉编译工具链和链接脚本配置。
+
+4. sdk_config_reference/
+   RT-Smart 相关配置参考，用于说明本工程使用 IPCM、RTT_CTRL、VIRT_TTY 等通信能力。
+
+
+五、完整 SDK 中编译命令
+
+进入目录：
+cd ~/k230_sdk/src/reference/K230_AI_Demo_Development_Process_Analysis/kmodel_related/kmodel_inference
+
+执行：
+chmod +x build_app.sh
+./build_app.sh
+
+
+六、开发板运行命令
+
+将生成的 k230_bin/face_access 推送到开发板：
+adb push k230_bin/face_access /sharefs/
+
+在 RT-Smart 大核串口中执行：
+cd /sharefs/face_access
+./start_face_access.sh
+
+停止程序：
+cd /sharefs/face_access
+./stop_face_access.sh
+
+
+七、Ubuntu Web 管理端启动命令
+
+cd ~/k230_sdk/src/reference/K230_AI_Demo_Development_Process_Analysis/kmodel_related/kmodel_inference/face_access_system/linux_service
+chmod +x start_web_adb.sh
+./start_web_adb.sh
+
+浏览器访问：
+http://127.0.0.1:8080
+
+
+八、说明
+
+本压缩包为“重要代码上交包”，不包含完整 k230_sdk 的所有系统源码和第三方库。若需要重新编译，需要把这些目录放回完整 k230_sdk 对应位置后，在已配置好的 K230 交叉编译环境中构建。

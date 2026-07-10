@@ -1,0 +1,3 @@
+ic_env/ld-linux-x86-64.so.2
+--library-path ic_env/ /home/ubuntu/k230_sdk/src/reference/K230_AI_Demo_Development_Process_Analysis/kmodel_related/kmodel_export/face_recognition/ic_env/Vkpu_top gmodel_dump_dir/0/gmodel.bin 1237440 1356624 256 /home/ubuntu/k230_sdk/src/reference/K230_AI_Demo_Development_Process_Analysis/kmodel_related/kmodel_export/face_recognition/gmodel_dump_dir/0/ 4 +perf +ckp +hang_10000 
+ 
